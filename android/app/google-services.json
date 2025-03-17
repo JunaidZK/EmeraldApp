@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "765823756888",
+    "project_id": "emerald-beauty-dc22c",
+    "storage_bucket": "emerald-beauty-dc22c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:765823756888:android:87addf408e4c954704382d",
+        "android_client_info": {
+          "package_name": "com.emeraldbeauty.employeefreelancer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC8j4kstrCvv8VqkMJWM-ALfcH8JCcMoXs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:765823756888:android:ff40845336460a6d04382d",
+        "android_client_info": {
+          "package_name": "com.emeraldbeauty.user"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC8j4kstrCvv8VqkMJWM-ALfcH8JCcMoXs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
