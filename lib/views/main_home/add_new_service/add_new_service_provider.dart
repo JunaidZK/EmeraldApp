@@ -95,31 +95,49 @@ class AddNewServiceProvider extends ChangeNotifier {
   }
 
   Future<bool> createNewUserService() async {
+    isLoading = true;
+    notifyListeners();
     if (serviceDocuments.isEmpty) {
       AppWidgets().snackbar(text: 'Please add service doc');
+      isLoading = false;
+      notifyListeners();
       return false;
     }
     if (portfolio.isEmpty) {
       AppWidgets().snackbar(text: 'Please add portfolio');
+      isLoading = false;
+      notifyListeners();
       return false;
     }
     if (selectedService == null) {
       AppWidgets().snackbar(text: 'Please Select service');
+      isLoading = false;
+      notifyListeners();
       return false;
     }
     if (selectedService == null) {
       AppWidgets().snackbar(text: 'Please Select service');
+      isLoading = false;
+      notifyListeners();
       return false;
     }
 
     String result = await createService.createNewService(
-        serviceId: selectedService!.id, price: int.parse(predefinePriceController.text) + int.parse(additonalPriceController.text), docs: serviceDocuments, portfolio: portfolio);
+      serviceId: selectedService!.id,
+      price: int.parse(predefinePriceController.text) + int.parse(additonalPriceController.text),
+      docs: serviceDocuments,
+      portfolio: portfolio,
+    );
 
     showToast(result);
 
-    if (result.contains("Successful")) {
+    if (result.contains("Your have created a new service")) {
+      isLoading = false;
+      notifyListeners();
       return true;
     } else {
+      isLoading = false;
+      notifyListeners();
       return false;
     }
   }

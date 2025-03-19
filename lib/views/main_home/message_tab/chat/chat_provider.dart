@@ -35,19 +35,34 @@ class ChatProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> sendMessage({required int employeeId}) async {
-    if (message.text.trim().isEmpty || chatRoomId == null) return;
+  Future<void> sendMessage({required int employeeId, String? fileUrl}) async {
+    if ((message.text.trim().isEmpty && fileUrl == null) || chatRoomId == null) return;
 
     await chatUser.sendMessage(
       chatRoomId: chatRoomId!,
       senderId: senderId,
       receiverId: employeeId.toString(),
-      message: message.text.trim(),
+      message: message.text.trim(), // Send text message
+      fileUrl: fileUrl, // Send file URL if available
     );
 
     message.clear();
     notifyListeners();
   }
+
+  // Future<void> sendMessage({required int employeeId, String? fileUrl}) async {
+  //   if (message.text.trim().isEmpty || chatRoomId == null) return;
+
+  //   await chatUser.sendMessage(
+  //     chatRoomId: chatRoomId!,
+  //     senderId: senderId,
+  //     receiverId: employeeId.toString(),
+  //     message: message.text.trim(),
+  //   );
+
+  //   message.clear();
+  //   notifyListeners();
+  // }
 
   String formatTime(Timestamp? timestamp) {
     if (timestamp == null) {
@@ -56,8 +71,7 @@ class ChatProvider extends ChangeNotifier {
 
     DateTime dateTime = timestamp.toDate();
 
-    String formattedTime =
-        "${_formatHour(dateTime.hour)}:${dateTime.minute.toString().padLeft(2, '0')} ${_getAmPm(dateTime.hour)}";
+    String formattedTime = "${_formatHour(dateTime.hour)}:${dateTime.minute.toString().padLeft(2, '0')} ${_getAmPm(dateTime.hour)}";
 
     return formattedTime;
   }

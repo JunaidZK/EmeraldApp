@@ -47,34 +47,20 @@ class DetailedBookingView extends StatelessWidget {
         create: (_) => DetailedBookingProvider(),
         child: Consumer<DetailedBookingProvider>(
           builder: (context, provider, child) {
-            final Color statusTextColor =
-                provider.status == "Confirmed" || provider.status == "Completed"
-                    ? brightGreen
-                    : provider.status == "In Progress"
-                        ? blueColor
-                        : provider.status == "Cancelled"
-                            ? redColor
-                            : yellowColor;
+            final Color statusTextColor = provider.status == "Confirmed" || provider.status == "Completed"
+                ? brightGreen
+                : provider.status == "In Progress"
+                    ? blueColor
+                    : provider.status == "Cancelled"
+                        ? redColor
+                        : yellowColor;
             return Scaffold(
-                appBar: appBar(
-                  context,
-                  title: title,
-                  leftIcon: null,
-                  leftWidget: GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: const AppSvg(
-                      svgName: arrowBack,
-                      boxfit: BoxFit.none,
-                    ),
-                  ),
-                ),
+                appBar: appBar(context,
+                    title: title, leftIcon: null, leftWidget: GestureDetector(onTap: () => Navigator.pop(context), child: const AppSvg(svgName: arrowBack, boxfit: BoxFit.none))),
                 body: SingleChildScrollView(
                   physics: const ClampingScrollPhysics(),
                   child: Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+                    padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -93,31 +79,14 @@ class DetailedBookingView extends StatelessWidget {
                                 )
                               ],
                             ),
-                            Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  AppTextSemiBold(
-                                    text: provider.status,
-                                    fontFamily: FontFamily.raleway,
-                                    fontSize: 16.sp,
-                                    color: statusTextColor,
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          AnimatedNavigation.bottomSlide(
-                                              ChatView(
-                                                  employeeId: employeeId)));
-                                    },
-                                    child: AppCircleShape(
-                                        horizontalPadding: 2.w,
-                                        verticalPadding: 1.5.h,
-                                        bgColor: lightAqua,
-                                        borderColor: lightAqua,
-                                        widget: const AppSvg(svgName: chat)),
-                                  )
-                                ])
+                            Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                              AppTextSemiBold(text: provider.status, fontFamily: FontFamily.raleway, fontSize: 16.sp, color: statusTextColor),
+                              GestureDetector(
+                                onTap: () => Navigator.push(context, AnimatedNavigation.bottomSlide(ChatView(employeeId: employeeId))),
+                                child:
+                                    AppCircleShape(horizontalPadding: 2.w, verticalPadding: 1.5.h, bgColor: lightAqua, borderColor: lightAqua, widget: const AppSvg(svgName: chat)),
+                              )
+                            ])
                           ],
                         ),
                         // SizedBox(height: 1.h),
@@ -278,9 +247,7 @@ class DetailedBookingView extends StatelessWidget {
                         App3DButton(
                           tap: () async {
                             UpdateBookingStatus status = UpdateBookingStatus();
-                            final String result = await status.updateBooking(
-                                bookingId: bookingId,
-                                decision: BookingDecision.COMPLETED);
+                            final String result = await status.updateBooking(bookingId: bookingId, decision: BookingDecision.COMPLETED);
                             showToast(result);
                             bottomSheet(
                                 context,
@@ -293,10 +260,7 @@ class DetailedBookingView extends StatelessWidget {
                                   oneButton: true,
                                   okTap: () async {
                                     Navigator.pop(context);
-                                    bottomSheet(
-                                        context,
-                                        AppGiveReview(
-                                            bookingId: bookingId, name: name));
+                                    bottomSheet(context, AppGiveReview(bookingId: bookingId, name: name));
                                     // Navigator.push(
                                     //   context,
                                     //   MaterialPageRoute(builder: (context) => const AppGiveReview())

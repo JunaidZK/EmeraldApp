@@ -5,8 +5,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 class FirestoreUser {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instanceFor(
-      app: Firebase.app(), databaseId: "emerald-beauty");
+  final FirebaseFirestore _firestore = FirebaseFirestore.instanceFor(app: Firebase.app(), databaseId: "emerald-beauty");
 
   Future<void> saveUsers({
     required RequestFrom requestFrom,
@@ -49,8 +48,7 @@ class FirestoreUser {
   Future<Map<String, dynamic>?> fetchEmployee({required int employeeId}) async {
     Map<String, dynamic>? userDetails;
     try {
-      var userSnapShot =
-          await _firestore.collection("users").doc(employeeId.toString()).get();
+      var userSnapShot = await _firestore.collection("users").doc(employeeId.toString()).get();
 
       if (userSnapShot.exists) {
         return userSnapShot.data(); // Return user data
@@ -72,9 +70,7 @@ class FirestoreUser {
       var chatsCollection = _firestore.collection("chats");
 
       // Check if chat already exists between sender and receiver
-      var chatQuery = await chatsCollection
-          .where('participants', arrayContains: senderId)
-          .get();
+      var chatQuery = await chatsCollection.where('participants', arrayContains: senderId).get();
 
       String chatRoomId = '';
 
@@ -108,41 +104,59 @@ class FirestoreUser {
     required String senderId,
     required String receiverId,
     required String message,
+    String? fileUrl, // For attachments
   }) async {
+    if (message.trim().isEmpty && fileUrl == null) return;
+
     try {
       var messageData = {
         'senderId': senderId,
         'receiverId': receiverId,
-        'message': message,
+        'message': message.trim(),
         'timestamp': FieldValue.serverTimestamp(),
-        'type': 'text',
+        'type': fileUrl != null ? 'file' : 'text',
+        'fileUrl': fileUrl
       };
 
-      await _firestore
-          .collection('chats')
-          .doc(chatRoomId)
-          .collection('messages')
-          .add(messageData);
+      await _firestore.collection('chats').doc(chatRoomId).collection('messages').add(messageData);
 
-      // Optionally update the last message info for easy querying
+      // Update last message info for better querying
       await _firestore.collection('chats').doc(chatRoomId).update({
-        'lastMessage': message,
+        'lastMessage': fileUrl != null ? '📎 Attachment' : message,
         'lastMessageTime': FieldValue.serverTimestamp(),
       });
 
-      debugPrint("Message sent!");
+      debugPrint("✅ Message sent successfully!");
     } catch (e) {
-      debugPrint("Error sending message: $e");
+      debugPrint("❌ Error sending message: $e");
     }
   }
 
+  // Future<void> sendMessage({
+  //   required String chatRoomId,
+  //   required String senderId,
+  //   required String receiverId,
+  //   required String message,
+  // }) async {
+  //   try {
+  //     var messageData = {'senderId': senderId, 'receiverId': receiverId, 'message': message, 'timestamp': FieldValue.serverTimestamp(), 'type': 'text'};
+
+  //     await _firestore.collection('chats').doc(chatRoomId).collection('messages').add(messageData);
+
+  //     // Optionally update the last message info for easy querying
+  //     await _firestore.collection('chats').doc(chatRoomId).update({
+  //       'lastMessage': message,
+  //       'lastMessageTime': FieldValue.serverTimestamp(),
+  //     });
+
+  //     debugPrint("Message sent!");
+  //   } catch (e) {
+  //     debugPrint("Error sending message: $e");
+  //   }
+  // }
+
   Stream<QuerySnapshot> getMessagesStream(String chatRoomId) {
-    return _firestore
-        .collection('chats')
-        .doc(chatRoomId)
-        .collection('messages')
-        .orderBy('timestamp', descending: false)
-        .snapshots();
+    return _firestore.collection('chats').doc(chatRoomId).collection('messages').orderBy('timestamp', descending: false).snapshots();
   }
 
   Stream<List<Map<String, dynamic>>> userChatsStream(String currentUserId) {
@@ -158,11 +172,9 @@ class FirestoreUser {
         var chatData = chatDoc.data();
 
         List participants = chatData['participants'];
-        String otherUserId =
-            participants.firstWhere((id) => id != currentUserId);
+        String otherUserId = participants.firstWhere((id) => id != currentUserId);
 
-        var userSnapshot =
-            await _firestore.collection('users').doc(otherUserId).get();
+        var userSnapshot = await _firestore.collection('users').doc(otherUserId).get();
 
         var userData = userSnapshot.data();
 

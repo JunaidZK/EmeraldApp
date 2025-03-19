@@ -11,14 +11,15 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 class AppChatTypo extends StatelessWidget {
   final VoidCallback? sendBtn;
   final VoidCallback? emojiTap;
-  const AppChatTypo({this.sendBtn, this.emojiTap, super.key});
+  final VoidCallback? fileTap;
+  const AppChatTypo({this.sendBtn, this.emojiTap, this.fileTap, super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
         padding: EdgeInsets.only(left: 3.w, right: 3.w, top: 1.h, bottom: 1.h),
         child: Row(children: [
-          const AppSvg(svgName: attachments),
+          InkWell(onTap: fileTap, child: const AppSvg(svgName: attachments)),
           SizedBox(width: 3.w),
           Expanded(
               child: AppSearchField(
@@ -30,7 +31,6 @@ class AppChatTypo extends StatelessWidget {
                   fillColor: whiteTextFieldColor,
                   icon: IconButton(
                       onPressed: emojiTap,
-                      // onPressed: () {},
                       icon: const Icon(
                         Icons.emoji_emotions_outlined,
                         color: lightGray,
